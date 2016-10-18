@@ -4,18 +4,15 @@
         "pebble-clay": "^1.0.1"
     },
     "keywords": [],
-    "name": "clay-example",
+    "name": "BrotherHood",
     "pebble": {
         "capabilities": [
             "configurable"
         ],
-        "displayName": "clay-example",
+        "displayName": "BrotherHood",
         "enableMultiJS": true,
         "messageKeys": [
-            "BackgroundColor",
-            "ForegroundColor",
-            "SecondTick",
-            "Animations"
+            "Faction"
         ],
         "projectType": "native",
         "resources": {
@@ -28,7 +25,7 @@
             "chalk",
             "diorite"
         ],
-        "uuid": "169d8c6a-af73-4ce8-aa06-7514941b9d5e",
+        "uuid": "21ee34c7-4c5b-4d1e-ae9d-477c585e8e12",
         "watchapp": {
             "watchface": false
         }

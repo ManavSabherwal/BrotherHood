@@ -9,14 +9,36 @@
         "displayName": "Testing menu",
         "enableMultiJS": true,
         "messageKeys": [
-            "Animations",
-            "BackgroundColor",
-            "ForegroundColor",
-            "SecondTick"
+            "Faction"
         ],
         "projectType": "native",
         "resources": {
-            "media": []
+            "media": [
+                {
+                    "file": "images/rsz_brother_ood.png",
+                    "name": "BROTHERHOOD_MENU",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/rsz_converted.png",
+                    "name": "ABSTERGO_MENU",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/converted.png",
+                    "name": "ABSTERGO",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                },
+                {
+                    "file": "images/brother ood.png",
+                    "name": "BROTHERHOOD",
+                    "targetPlatforms": null,
+                    "type": "bitmap"
+                }
+            ]
         },
         "sdkVersion": "3",
         "targetPlatforms": [
@@ -24,7 +46,7 @@
             "basalt",
             "chalk"
         ],
-        "uuid": "6b0818e3-66df-4775-8961-0fd1dd53e264",
+        "uuid": "21ee34c7-4c5b-4d1e-ae9d-477c585e8e12",
         "watchapp": {
             "watchface": true
         }

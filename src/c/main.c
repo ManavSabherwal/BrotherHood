@@ -2,17 +2,40 @@
 #include "main.h"
 
 static Window *s_window;
-static TextLayer *s_label_secondtick, *s_label_animations;
+static TextLayer *s_label_faction
 
+static BitmapLayer *s_background_layer;
+static GBitmap *s_background_bitmap;
+
+
+static void update_time() {
+  // Get a tm structure
+  time_t temp = time(NULL); 
+  struct tm *tick_time = localtime(&temp);
+
+  // Write the current hours and minutes into a buffer
+  static char s_buffer[8];
+  strftime(s_buffer, sizeof(s_buffer), clock_is_24h_style() ?
+                                          "%H:%M" : "%I:%M", tick_time);
+
+  // Display this time on the TextLayer
+  text_layer_set_text(s_time_layer, s_buffer);
+}
+
+static void tick_handler(struct tm *tick_time, TimeUnits units_changed) {
+  update_time();
+}
+  
+  
+  
 // A struct for our specific settings (see main.h)
 ClaySettings settings;
 
 // Initialize the default settings
 static void prv_default_settings() {
-  settings.BackgroundColor = GColorBlack;
-  settings.ForegroundColor = GColorWhite;
-  settings.SecondTick = false;
-  settings.Animations = false;
+  settings.BackgroundColor = GColorClear;
+  settings.ForegroundColor = GColorBlack;
+  settings.Faction = false;
 }
 
 // Read settings from persistent storage
@@ -31,53 +54,71 @@ static void prv_save_settings() {
 }
 
 // Update the display elements
+
 static void prv_update_display() {
   // Background color
   window_set_background_color(s_window, settings.BackgroundColor);
 
-  // Foreground Color
-  text_layer_set_text_color(s_label_secondtick, settings.ForegroundColor);
-  text_layer_set_text_color(s_label_animations, settings.ForegroundColor);
 
-  // Seconds
-  if (settings.SecondTick) {
-    text_layer_set_text(s_label_secondtick, "seconds: enabled");
-  } else {
-    text_layer_set_text(s_label_secondtick, "seconds: disabled");
-  }
+  // factions
+  if (settings.Faction) {
+    
+  // Create the TextLayer with specific bounds
+  s_time_layer = text_layer_create(
+    GRect(0, 0, bounds.size.w, 50));
 
-  // Animations
-  if (settings.Animations) {
-    text_layer_set_text(s_label_animations, "animations: enabled");
-  } else {
-    text_layer_set_text(s_label_animations, "animations: disabled");
-  }
+
+  // Improve the layout to be more like a watchface
+  text_layer_set_background_color(s_time_layer, GColorClear);
+  text_layer_set_text_color(s_time_layer, GColorBlack);
+  text_layer_set_text(s_time_layer, "00:00");
+  text_layer_set_font(s_time_layer, fonts_get_system_font(FONT_KEY_LECO_42_NUMBERS));
+  text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
+  
+  // Create GBitmap
+  s_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_BROTHERHOOD);
+
+  // Create BitmapLayer to display the GBitmap
+  s_background_layer = bitmap_layer_create(bounds);
+
+  // Set the bitmap onto the layer and add to the window
+  bitmap_layer_set_bitmap(s_background_layer, s_background_bitmap);
+  layer_add_child(window_layer, bitmap_layer_get_layer(s_background_layer));
+
+
+  // Add it as a child layer to the Window's root layer
+  layer_add_child(window_layer, text_layer_get_layer(s_time_layer));
 }
+  
+  else {
+  
+  // Improve the layout to be more like a watchface
+  text_layer_set_background_color(s_time_layer, GColorBlack);
+  text_layer_set_text_color(s_time_layer, GColorBlueMoon);
+  text_layer_set_font(s_time_layer, fonts_get_system_font(FONT_KEY_LECO_42_NUMBERS));
+  text_layer_set_text_alignment(s_time_layer, GTextAlignmentCenter);
+  
+    // Create GBitmap
+  s_background_bitmap = gbitmap_create_with_resource(RESOURCE_ID_ABSTERGO);
+
+  // Create BitmapLayer to display the GBitmap
+  s_background_layer = bitmap_layer_create(bounds);
+
+  // Set the bitmap onto the layer and add to the window
+  bitmap_layer_set_bitmap(s_background_layer, s_background_bitmap);
+  layer_add_child(window_layer, bitmap_layer_get_layer(s_background_layer));
+
+  // Add it as a child layer to the Window's root layer
+  layer_add_child(window_layer, text_layer_get_layer(s_time_layer));
+  }
+
 
 // Handle the response from AppMessage
-static void prv_inbox_received_handler(DictionaryIterator *iter, void *context) {
-  // Background Color
-  Tuple *bg_color_t = dict_find(iter, MESSAGE_KEY_BackgroundColor);
-  if (bg_color_t) {
-    settings.BackgroundColor = GColorFromHEX(bg_color_t->value->int32);
-  }
-
-  // Foreground Color
-  Tuple *fg_color_t = dict_find(iter, MESSAGE_KEY_ForegroundColor);
-  if (fg_color_t) {
-    settings.ForegroundColor = GColorFromHEX(fg_color_t->value->int32);
-  }
 
   // Second Tick
-  Tuple *second_tick_t = dict_find(iter, MESSAGE_KEY_SecondTick);
-  if (second_tick_t) {
-    settings.SecondTick = second_tick_t->value->int32 == 1;
-  }
-
-  // Animations
-  Tuple *animations_t = dict_find(iter, MESSAGE_KEY_Animations);
-  if (animations_t) {
-    settings.Animations = animations_t->value->int32 == 1;
+  Tuple *Faction_t = dict_find(iter, MESSAGE_KEY_Faction);
+  if (Faction_t) {
+    settings.Faction = Faction_t->value->int32 == 1;
   }
 
   // Save the new settings to persistent storage
