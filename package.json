@@ -1,0 +1,33 @@
+{
+    "author": "manavsabherwal2012@hotmail.com",
+    "dependencies": {
+        "pebble-clay": "^1.0.2"
+    },
+    "keywords": [],
+    "name": "testing-menu",
+    "pebble": {
+        "displayName": "Testing menu",
+        "enableMultiJS": true,
+        "messageKeys": [
+            "Animations",
+            "BackgroundColor",
+            "ForegroundColor",
+            "SecondTick"
+        ],
+        "projectType": "native",
+        "resources": {
+            "media": []
+        },
+        "sdkVersion": "3",
+        "targetPlatforms": [
+            "aplite",
+            "basalt",
+            "chalk"
+        ],
+        "uuid": "6b0818e3-66df-4775-8961-0fd1dd53e264",
+        "watchapp": {
+            "watchface": true
+        }
+    },
+    "version": "1.0.0"
+}
